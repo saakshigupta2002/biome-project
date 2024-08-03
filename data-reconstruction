@@ -1,0 +1,39 @@
+import pandas as pd
+
+# Set display options to show more columns and rows
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_rows', 20)
+
+# Step 1: Load the data
+df = pd.read_csv('Biome Data-5.csv', parse_dates=['Time'])
+
+# Step 2: Pivot the table
+df_pivot = df.pivot(index=['Time', 'Sensor ID'], columns='Sensor', values='Value')
+
+# Step 3: Reset the index to make Time and Sensor ID regular columns
+df_pivot.reset_index(inplace=True)
+
+# Step 4: Sort the dataframe by Time and Sensor ID
+df_pivot.sort_values(['Time', 'Sensor ID'], inplace=True)
+
+# Step 5: Format the Time column to a more readable string
+df_pivot['Time'] = df_pivot['Time'].dt.strftime('%Y-%m-%d %H:%M:%S')
+
+# Step 6: Display the first few rows of the pivoted dataframe
+print(df_pivot.head(10))
+
+# Step 7: Display the shape of the pivoted dataframe
+print("\nShape of the pivoted dataframe:", df_pivot.shape)
+
+# Step 8: Save the pivoted dataframe to a new Excel file
+df_pivot.to_excel('Biome_Data.xlsx', index=False, engine='openpyxl')
+print("\nPivoted data has been saved to 'Biome_Data.xlsx'")
+
+# Step 9: Display information about the pivoted dataframe
+print("\nDataframe Info:")
+df_pivot.info()
+
+# Step 10: Display summary statistics of the pivoted dataframe
+print("\nSummary Statistics:")
+print(df_pivot.describe())
